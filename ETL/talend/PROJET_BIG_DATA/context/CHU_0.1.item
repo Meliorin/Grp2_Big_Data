@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<talendfile:ContextType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" xmi:id="_XweDehm2Q3CUSwTylF-EIw" confirmationNeeded="false" name="Default">
+  <contextParameter xmi:id="_oPcw9jiESQ65S9Wd21AWCA" comment="Lot de chargement yyyy-MM-dd (vide = date du jour)" name="date_lot" prompt="date_lot?" promptNeeded="false" type="id_String" value=""/>
+  <contextParameter xmi:id="_JMPbb8yzRsKhfMoejF77qg" comment="Dossier local des fichiers sources" name="data_dir" prompt="data_dir?" promptNeeded="false" type="id_String" value="C:/Users/Utilisateur/Documents/CESI/A4/Big Data/Projet/Livrable 2/DATA 2024"/>
+  <contextParameter xmi:id="_pA-J9_QJRLuc7YBLmtdtlQ" comment="Serveur PostgreSQL source" name="pg_host" prompt="pg_host?" promptNeeded="false" type="id_String" value="localhost"/>
+  <contextParameter xmi:id="_D4RyyL5URBC02Q7bdeyZ1Q" comment="" name="pg_port" prompt="pg_port?" promptNeeded="false" type="id_String" value="5432"/>
+  <contextParameter xmi:id="_8imWF2qVRPSnG1Ng_uUvnA" comment="Nom de la base restauree depuis le dump DATA2023" name="pg_db" prompt="pg_db?" promptNeeded="false" type="id_String" value="A_RENSEIGNER"/>
+  <contextParameter xmi:id="_za8Fkx6qS5CFXfrcCyhIYw" comment="" name="pg_schema" prompt="pg_schema?" promptNeeded="false" type="id_String" value="public"/>
+  <contextParameter xmi:id="_GjVtB-LSQE2rPFEtJ_bvpA" comment="" name="pg_user" prompt="pg_user?" promptNeeded="false" type="id_String" value="postgres"/>
+  <contextParameter xmi:id="_ujjUJJGmScOI0Q_SJds0QA" comment="Mot de passe PostgreSQL (eviter &amp; ? # dans le mot de passe)" name="pg_pwd" prompt="pg_pwd?" promptNeeded="false" type="id_String" value=""/>
+  <contextParameter xmi:id="_mpTzaMFIQky1x-6p_NausQ" comment="HiveServer2" name="hive_host" prompt="hive_host?" promptNeeded="false" type="id_String" value="quickstart.cloudera"/>
+  <contextParameter xmi:id="_qerhMlzSQR6Hn8X3B3giHQ" comment="" name="hive_port" prompt="hive_port?" promptNeeded="false" type="id_String" value="10000"/>
+  <contextParameter xmi:id="_Nb_bHXNyQ9OzZdA8iU6ZBQ" comment="" name="hive_user" prompt="hive_user?" promptNeeded="false" type="id_String" value="cloudera"/>
+  <contextParameter xmi:id="_CMzhrFSARl-CbFOrWihcpw" comment="NameNode" name="hdfs_uri" prompt="hdfs_uri?" promptNeeded="false" type="id_String" value="hdfs://quickstart.cloudera:8020"/>
+  <contextParameter xmi:id="_K_WZ7z5iSDmLDkW6BR9-KQ" comment="" name="hdfs_user" prompt="hdfs_user?" promptNeeded="false" type="id_String" value="cloudera"/>
+  <contextParameter xmi:id="_xwH8CDPySOqUqcUJX_C0mg" comment="Sel de pseudonymisation SHA-256 (OBLIGATOIRE, ne jamais le commiter)" name="sel_hash" prompt="sel_hash?" promptNeeded="false" type="id_String" value=""/>
+  <contextParameter xmi:id="_sk9zDlqnTrKHVTs_5pgXww" comment="Dossier des scripts HiveQL (lu par J00_Init_DDL)" name="hql_dir" prompt="hql_dir?" promptNeeded="false" type="id_String" value="C:/Users/Utilisateur/Documents/CESI/A4/Big Data/Projet/Livrable 2/ETL/hql"/>
+</talendfile:ContextType>
