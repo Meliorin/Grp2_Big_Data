@@ -23,3 +23,14 @@ hive -f ETL/hql/00_DDL.hql        # après le dépôt de temps.csv dans /datalak
 
 À prévoir côté données : le fichier `Referentiel/ref_departement_region.csv`
 (`code_departement;nom_departement;region`), utilisé par J1, n'est pas fourni dans les données du projet.
+
+## Contrôle qualité et benchmark (livrable 2)
+
+| Fichier | Rôle |
+|---|---|
+| `qualite/09_qualite_groupe.hql` | Contrôle qualité complet de la chaîne Hive (complétude, cohérence FINESS/ADELI, orphelins, rejets, journal, volumes) dans la base `qualite_groupe`. |
+| `qualite/09a_qualite_partielle.hql`, `09b_...`, `09c_volumes_adeli.hql` | Version découpée lancée le 09/11 sur les tables chargées par J1 à J4, J7 et J8 (J5 et J6 non exécutés). |
+| `benchmark/01_gold_brut.sql`, `01b_gold_brut_partiel.sql` | Impala : base `gold_brut_grp`, mêmes données que `gold` en Parquet sans partition (référence « avant »). |
+| `benchmark/02_gold_opt_buckets.hql` | Hive : base `gold_opt` (partitions + buckets). |
+| `benchmark/requetes/`, `benchmark/requetes_grp/` | Requêtes du benchmark (Q1 à Q8 sur toute la Gold ; Q7 à Q11 sur décès et satisfaction). |
+| `benchmark/bench_impala.js`, `graphiques.js` | Mesure (1 chauffe + 3 exécutions, médiane) par scénario `avant`, `stats`, `partition`, `partition_stats`, `buckets`, puis graphiques PNG. |
