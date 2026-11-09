@@ -1,6 +1,5 @@
 -- =====================================================================================================
 -- Livrable 2 - Groupe 2 (Datavengers) - 00_DDL.hql (prérequis des jobs J0 à J8 du groupe)
--- Reconstitué par TRICOIRE Louis à partir des colonnes lues et écrites par les scripts J0 à J8 :
 -- tables Bronze (dépôts Talend sur HDFS), vues silver.v_j1 à v_j8 (règles de nettoyage), tables Silver,
 -- Gold (dim_* et fait_*), audit et gold.dual. Les règles des vues reprennent celles du livrable 1.
 -- Hive 1.1 (CDH 5.12) : pas de point-virgule dans les commentaires (beeline découpe dessus),
