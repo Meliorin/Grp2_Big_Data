@@ -1,0 +1,44 @@
+{
+ "paragraphes": [
+  {
+   "debut": "Ensuite, on a relancé le même contrôle le 9 novembre",
+   "nouveau": "Ensuite, on a relancé le même contrôle sur les tables Hive chargées par nos jobs, avec les scripts 09a à 09e. Les tableaux qui suivent portent sur toutes les sources : référentiels, patients, consultations, hospitalisations, décès et satisfaction. Pour les décès, J7 a été lancé sur un lot réduit aux années 2014 et suivantes, puisque le job ne garde de toute façon que ces années. La Silver et la Gold sont les mêmes, seul le nombre de lignes lues en Bronze est plus petit. Le fichier complet est conservé dans une archive HDFS. Tous les scripts de la chaîne sont disponibles sur le dépôt GitHub du groupe (Meliorin/Grp2_Big_Data) : le DDL (00_DDL.hql), les jobs DML J0 à J8, ainsi que les scripts de contrôle qualité et de benchmark."
+  },
+  {
+   "debut": "Tout d'abord, le journal montre que tous les jobs",
+   "nouveau": "Tout d'abord, le journal montre que tous les jobs se terminent avec le statut OK et que les volumes sont ceux attendus : 416 665 organisations, 1 048 575 professionnels, 15 490 diagnostics, 100 000 patients, 1 027 157 consultations, 2 479 hospitalisations, 3 740 528 décès en Silver et 13 560 scores de satisfaction (une ligne par établissement et par critère, d'où plus de lignes qu'en Bronze). Par ailleurs, aucune clé de la Gold n'est orpheline, car chaque fait retrouve son établissement, son professionnel, son diagnostic, son patient, sa localisation et sa date dans les dimensions."
+  },
+  {
+   "debut": "Pour finir, les rejets sont proches de la référence",
+   "nouveau": "Pour finir, les rejets sont proches de la référence, avec trois différences de règle. Pour les décès, J7 écarte 42 721 lignes (1,1 % du lot 2014+). Les 40 981 décès à l'étranger et les 131 dates invalides sont les mêmes, mais J7 ne rejette pas les départements hors référentiel (collectivités d'outre-mer, Monaco). Il écarte à la place 871 codes de lieu invalides et garde les autres lignes, dont 6 606 n'ont pas de département dans le référentiel. Il trouve aussi 738 doublons au lieu de 635, car sa clé de dédoublonnage n'est pas tout à fait la même. Pour la satisfaction, J8 rejette 4 864 scores de classe DI (26,4 %), mais ne rejette pas les FINESS inconnus : 72 scores sur 13 560 n'ont pas d'établissement dans le référentiel. Enfin, J5 et J6 ne rejettent aucune ligne. Pour les consultations, c'est le même résultat que la référence. Pour les hospitalisations, en revanche, J6 ne contrôle pas la date d'entrée par rapport à la naissance du patient : il garde donc les 62 séjours que la référence écartait. Ces écarts devront être harmonisés entre les jobs et les règles du livrable 1."
+  },
+  {
+   "debut": "Concrètement, on a appliqué le même protocole",
+   "nouveau": "Concrètement, on a appliqué le même protocole à la Gold produite par la chaîne Hive du groupe, dans Impala, sur toutes les tables de faits : consultations (1 027 157 consultations), hospitalisations (2 479 séjours), décès (2 099 392 lignes, 3 740 528 décès de 2014 à 2020) et satisfaction (8 272 lignes, e-Satis 2019 et 2020). On utilise douze requêtes : Q1 à Q8 et la variante Q7b reprennent celles de la section 3, et trois nouvelles requêtes (Q9 à Q11) portent sur les décès et la satisfaction. Quatre scénarios sont comparés. Il y a la base gold_brut_grp (mêmes données en Parquet, sans partition), avec ou sans statistiques, puis la base gold du groupe, partitionnée par année, avec ou sans statistiques. Chaque requête est lancée une fois pour chauffer le cache puis trois fois, et on garde la médiane. Dans tous les scénarios, les résultats sont identiques à ceux de l'étape avant (même empreinte). Les requêtes et les scripts du benchmark sont disponibles sur le dépôt GitHub du groupe, avec le DDL et les jobs DML."
+  },
+  {
+   "debut": "Tout d'abord, le partitionnement par année réduit bien la lecture",
+   "nouveau": "Tout d'abord, le partitionnement par année réduit bien la lecture sur les requêtes qui filtrent sur la colonne annee de la table de faits. Q3 (hospitalisations de 2019) ne prévoit plus que 0,5 Mo à lire au lieu de 2,6 Mo (-80 %), Q7 (décès 2019) 1,1 Mo au lieu de 4,7 Mo (-77 %) et Q10 (décès 2020-2021) 0,59 Mo au lieu de 4,7 Mo (-88 %), car le fichier source s'arrête en 2020. Q2, qui porte sur trois années de consultations, lit 3,6 Mo au lieu de 5,5 Mo (-33 %). À l'inverse, les requêtes sans filtre sur l'année lisent toutes les partitions et ne gagnent rien. C'est le cas de Q9, et même de Q4 et Q6, qui lisent un peu plus de données, sans doute parce que les petits fichiers de chaque partition se compressent moins bien qu'un seul gros fichier. Q7b est un cas à part. C'est le même indicateur que Q7, mais le filtre sur l'année est posé sur la dimension Temps, comme le ferait un outil de restitution. Impala ne peut alors éliminer aucune partition et lit les 7 années. Pour profiter du partitionnement, les graphiques Superset devront donc filtrer sur la colonne annee du fait."
+  },
+  {
+   "debut": "Du côté des temps de réponse",
+   "nouveau": "Du côté des temps de réponse, les écarts entre scénarios ne sont pas significatifs à ce volume. Avant optimisation, les requêtes répondent entre 1,7 et 6,2 s, et avec les partitions et les statistiques entre 2,1 et 6,7 s. Ces durées correspondent surtout au coût fixe d'Impala sur la VM (planification, démarrage des fragments, ouverture des fichiers) et non à la lecture de quelques mégaoctets. Elles varient d'ailleurs beaucoup d'une série de mesures à l'autre. C'est pourquoi on a lancé deux séries et gardé la moyenne : d'une série à l'autre, le temps d'une même requête change de 17 % en valeur médiane, soit plus que la plupart des écarts entre scénarios. Découper une petite table en partitions ajoute même un peu de temps, car il y a plus de fichiers à ouvrir et plus de métadonnées à lire. Seule Q1, qui ne lit qu'une année de consultations pour un établissement, gagne nettement (-26 %) avec les partitions et les statistiques. Le gain mesurable aujourd'hui est donc celui sur les données lues. Il deviendra un gain de temps quand les tables pèseront plusieurs centaines de mégaoctets par partition, avec l'historique des décès et surtout des consultations."
+  }
+ ],
+ "ajouts": [
+  {
+   "apres": "Ensuite, les résultats confirment ceux de la référence",
+   "texte": "Pour les consultations et les hospitalisations, les liens sont complets : tous les patients, professionnels et diagnostics des consultations existent dans leurs tables, et tous les séjours retrouvent leur établissement (FINESS) et leur diagnostic. Comme dans la référence, 63,9 % des consultations sont rattachées à une organisation (656 063 sur 1 027 157), en passant par l'activité du professionnel. Cependant, dans la Gold, seules 375 422 consultations (36,5 %) ont un établissement de santé. En effet, la dimension Établissement ne garde que les organisations de type F (celles qui ont un code FINESS), et les consultations faites dans un cabinet passent sur la ligne -1 « Non renseigné ». Il faut garder ce choix en tête pour lire les indicateurs par établissement."
+  }
+ ],
+ "remplacements": [
+  {
+   "cherche": "(médiane de 3 exécutions, en ms)",
+   "remplace": "(moyenne de deux séries de 3 exécutions, en ms)"
+  },
+  {
+   "cherche": "jusqu'à 87",
+   "remplace": "jusqu'à 88"
+  }
+ ]
+}

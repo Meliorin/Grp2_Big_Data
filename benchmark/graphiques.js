@@ -89,7 +89,7 @@ const N = R.essais || 3;
 // 1. Temps relatif : 100 % = temps avant optimisation
 png('1_temps_relatif', barres({
   titre: 'Temps de réponse relatif, par requête et par optimisation (Impala)',
-  sousTitre: `Médiane de ${N} exécutions, 100 % = temps avant optimisation (plus court = plus rapide)`,
+  sousTitre: `${typeof N === "string" ? "Moyenne de 2 séries (médiane de 3 exécutions chacune)" : "Médiane de " + N + " exécutions"}, 100 % = temps avant optimisation (plus court = plus rapide)`,
   groupes: requetes, series: SC, unite: ' %', ligneRef: 100,
   valeur: (sc, q) => { const a = val('avant', q, 'mediane_ms'), v = val(sc, q, 'mediane_ms'); return v === undefined ? undefined : (100 * v) / a; },
   etiquette: (v) => fmt(v, 0) + ' %',
@@ -98,7 +98,7 @@ png('1_temps_relatif', barres({
 // 2. Temps absolus : avant / version retenue (partitions + statistiques) / buckets
 png('2_temps_avant_apres', barres({
   titre: 'Temps de réponse avant et après optimisation (ms)',
-  sousTitre: `Médiane de ${N} exécutions, temps mesuré par impala-shell, Gold en Parquet`,
+  sousTitre: `${typeof N === "string" ? "Moyenne de 2 séries (médiane de 3 exécutions chacune)" : "Médiane de " + N + " exécutions"}, temps mesuré par impala-shell, Gold en Parquet`,
   groupes: requetes, series: SC.filter((x) => ["avant", "partition_stats", "buckets"].includes(x.id)), unite: ' ms',
   valeur: (sc, q) => val(sc, q, 'mediane_ms'),
   etiquette: (v) => fmt(v, 0) + ' ms',
